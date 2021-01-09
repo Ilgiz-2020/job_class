@@ -13,6 +13,7 @@
 
 from termcolor import cprint
 import random
+import time
 
 class Human:
 
@@ -27,7 +28,7 @@ class Human:
 
     def work(self):
         cprint(f'{self.name} сходил на работу', color='blue')
-        self.money += 50
+        self.house.money += 50
         self.fullness -= 10
 
 
@@ -38,6 +39,28 @@ class Human:
             self.house.food -= 10
         else:
             cprint(f'{self.name} - нет еды', color='red')
+            self.shopping()
+
+
+    def go_to_the_house(self, house):
+        self.house = house
+        self.fullness -= 10
+        cprint(f'{self.name} - заселился в доме', color='green')
+
+
+    def shopping(self):
+        if self.house.money >= 50:
+            cprint(f'{self.name} - пошёл в магазин за едой', color='magenta')
+            self.house.money -= 50
+            self.house.food += 50
+        else:
+            cprint(f'{self.name} - кончились деньги', color='red')
+            self.work()
+
+
+    def watch_TV(self):
+        cprint(f'{self.name} - Смотрит телевизор', color='green')
+        self.fullness -= 10
 
 
     def act(self):
@@ -45,10 +68,19 @@ class Human:
             cprint(f'{self.name} - умер ...', color='red')
             return
         dice = random.randint(1, 6)
-        if dice == 1:
+
+        if self.fullness < 20:
+            self.eat()
+        elif self.house.food < 10:
+            self.shopping()
+        elif self.house.money <= 50:
+            self.work()
+        elif dice == 1:
             self.work()
         elif dice == 2:
-            pass
+            self.eat()
+        else:
+            self.watch_TV()
         
 
 
@@ -64,9 +96,31 @@ class House:
         return f'В доме еды осталось {self.food}, денег осталось {self.money}'
 
 
-    
+house = House()
+citizens = [
+    Human(name='Бивис'),
+    Human(name='Батхед'),
+    Human(name='Кенни')
+]
+
+# Заселение объектов
+for citizen in citizens:
+    citizen.go_to_the_house(house)
 
 
-# Создадим двух людей, живущих в одном доме - Бивиса и Батхеда
+for day in range(1,2):
+    print(f'================= {day} =================')
+    for citizen in citizens:
+        time_act = random.randint(1, 2)
+        time.sleep(time_act)
+        citizen.act()
+    print('--- Конец дня ---')
+    for citizen in citizens:
+        print(citizen)
+        print(house) 
+
+
+
+# Создадим трех людей, живущих в одном доме - Бивиса и Батхеда
 # Нужен класс Дом, в нем должен быть холодильник с едой и тумбочка с деньгами
 # Еда пусть хранится в холодильнике в доме, а деньги - в тумбочке.
