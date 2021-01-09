@@ -1,7 +1,8 @@
 # git init - создание git репозитория
 # git config user.name 'Ilgiz'
 # git config user.email 'test@gmail.com'
-
+# git add .
+# git commit -m 'Создали модель человека : eat, work, act'
 
 # Реализуем модель человека.
 # Человек может есть, работать, играть, ходить в магазин.
@@ -53,7 +54,14 @@ class Human:
 
 
 class House:
-    pass
+    
+    def __init__(self):
+        self.food = 50
+        self.money = 0
+
+
+    def __str__(self):
+        return f'В доме еды осталось {self.food}, денег осталось {self.money}'
 
 
     
