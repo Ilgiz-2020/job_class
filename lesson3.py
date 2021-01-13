@@ -2,6 +2,7 @@
 # git config user.name 'Ilgiz'
 # git config user.email 'test@gmail.com'
 # git add .
+# git reset - 
 # git commit -m 'Создали модель человека : eat, work, act'
 
 # Реализуем модель человека.
@@ -21,6 +22,7 @@ class Human:
         self.name = name 
         self.fullness = 50 
         self.house = None 
+        self.action = False
 
     def __str__(self):
         return f'Я - {self.name}, сытость {self.fullness}'
@@ -67,21 +69,62 @@ class Human:
         if self.fullness <= 0:
             cprint(f'{self.name} - умер ...', color='red')
             return
-        dice = random.randint(1, 6)
+        
+        self.dice = random.randint(1, 6)
 
         if self.fullness < 20:
+            self.action = True
             self.eat()
         elif self.house.food < 10:
+            self.action = True
             self.shopping()
         elif self.house.money <= 50:
+            self.action = True
             self.work()
-        elif dice == 1:
+        elif self.dice == 1:
             self.work()
-        elif dice == 2:
+        elif self.dice == 2:
             self.eat()
-        else:
+        elif self.dice == 3:
             self.watch_TV()
-        
+
+
+class Programmer(Human):
+    def work(self):
+        super().work()
+        self.house.money += 150
+        self.fullness -= 20
+
+    
+    def watch_youtube(self):
+        cprint(f'{self.name} - Смотрит Youtube', color='green')
+        self.fullness -= 10
+
+
+    def freelance(self):
+        cprint(f'{self.name} - зашёл на фриланс', color='blue')
+        self.house.money += 50
+        self.fullness -= 30
+
+
+    def play_game(self):
+        cprint(f'{self.name} - весь день играл в игры', color='green')
+        self.fullness -= 10
+
+
+    def act(self):
+        super().act()
+        if not self.action and self.fullness >= 10: 
+            if self.dice == 4:
+                self.watch_youtube()
+            elif self.dice == 5:
+                self.freelance()
+            elif self.dice == 6:
+                self.play_game()
+
+
+
+
 
 
 
@@ -96,28 +139,30 @@ class House:
         return f'В доме еды осталось {self.food}, денег осталось {self.money}'
 
 
-house = House()
+
 citizens = [
-    Human(name='Бивис'),
-    Human(name='Батхед'),
-    Human(name='Кенни')
+    Programmer(name='Бивис'),
+    Programmer(name='Батхед'),
+    Programmer(name='Кенни')
 ]
 
 # Заселение объектов
 for citizen in citizens:
-    citizen.go_to_the_house(house)
+    citizen.go_to_the_house(House())
 
 
-for day in range(1,2):
+for day in range(1,6):
     print(f'================= {day} =================')
     for citizen in citizens:
         time_act = random.randint(1, 2)
         time.sleep(time_act)
         citizen.act()
+        citizen.action = False
     print('--- Конец дня ---')
     for citizen in citizens:
         print(citizen)
-        print(house) 
+        print(citizen.house)
+        # print(house) 
 
 
 
