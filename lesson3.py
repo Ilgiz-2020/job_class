@@ -37,8 +37,8 @@ class Human:
     def eat(self):
         if self.house.food >= 10:
             cprint(f'{self.name} - поел', color='yellow')
-            self.fullness += 10
-            self.house.food -= 10
+            self.fullness += 30
+            self.house.food -= 30
         else:
             cprint(f'{self.name} - нет еды', color='red')
             self.shopping()
@@ -75,7 +75,7 @@ class Human:
         if self.fullness < 20:
             self.action = True
             self.eat()
-        elif self.house.food < 10:
+        elif self.house.food <= 20:
             self.action = True
             self.shopping()
         elif self.house.money <= 50:
@@ -104,7 +104,7 @@ class Programmer(Human):
     def freelance(self):
         cprint(f'{self.name} - зашёл на фриланс', color='blue')
         self.house.money += 50
-        self.fullness -= 30
+        self.fullness -= 10
 
 
     def play_game(self):
@@ -131,7 +131,7 @@ class Gamer(Human):
     def championship(self):
         cprint(f'{self.name} - участвует в чемпионате по Dota2', color='blue')
         self.house.money += 50
-        self.fullness -= 20
+        self.fullness -= 10
 
     def learn(self):
         cprint(f'{self.name} - изучает теорию игр', color='green')
@@ -155,7 +155,7 @@ class SMM(Human):
     def picture(self):
         cprint(f'{self.name} - готовит картинку для поста на Facebook', color='blue')
         self.house.money += 50
-        self.fullness -= 20
+        self.fullness -= 10
 
     def stories(self):
         cprint(f'{self.name} - снимает сторис для Instagram', color='green')
@@ -187,8 +187,8 @@ class House:
 
 citizens = [
     Programmer(name='Бивис'),
-    Programmer(name='Батхед'),
-    Programmer(name='Кенни')
+    SMM(name='Батхед'),
+    Gamer(name='Кенни')
 ]
 
 # Заселение объектов
@@ -196,7 +196,7 @@ for citizen in citizens:
     citizen.go_to_the_house(House())
 
 
-for day in range(1,6):
+for day in range(1,11):
     print(f'================= {day} =================')
     for citizen in citizens:
         time_act = random.randint(1, 2)
